@@ -1,0 +1,125 @@
+
+
+services:
+  # 🤖 Telegram Bot Service
+  telegram-bot: 
+    build:
+      context: .
+      dockerfile: bot/Dockerfile
+    container_name: telegram-bot
+    restart: unless-stopped
+    
+    # 🔧 Переменные окружения из .env файла
+    env_file:
+      - .env
+    
+    # 📁 Монтирование файлов
+    volumes:
+      - ./logs:/app/logs
+    
+    # 🌐 Сеть
+    networks:
+      - bot-network
+    
+    # 🏥 Health check
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://127.0.0.1:8443/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    
+    # 📊 Ограничения ресурсов
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: '0.5'
+        reservations:
+          memory: 256M
+          cpus: '0.25'
+
+  # 🌐 Nginx Static Server
+  nginx:
+    image: nginx:alpine
+    container_name: nginx-static
+    restart: unless-stopped
+    
+    # 🔌 Порты
+    ports:
+      - "3010:3010" # Внутренний порт для серверного nginx
+    
+    # 📁 Монтирование файлов
+    volumes:
+      # Конфигурация Nginx
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      
+      # Mini App статические файлы
+      - mini-app-dist:/usr/share/nginx/html/app:ro
+      
+      # Логи
+      - ./nginx/logs:/var/log/nginx
+    
+    # 🌐 Сеть
+    networks:
+      - bot-network
+    
+    # 🔗 Зависимости
+    depends_on:
+      mini-app-builder:
+        condition: service_completed_successfully
+      telegram-bot:
+        condition: service_healthy
+    
+    # 🏥 Health check
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  # 📊 Monitoring (опционально)
+  watchtower:
+    image: containrrr/watchtower:latest
+    container_name: watchtower
+    restart: unless-stopped
+    
+    # 📁 Монтирование Docker socket
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    
+    # ⚙️ Настройки автообновления
+    environment:
+      - WATCHTOWER_CLEANUP=true
+      - WATCHTOWER_POLL_INTERVAL=3600  # Проверка каждый час
+      - WATCHTOWER_INCLUDE_RESTARTING=true
+    
+    # 🌐 Сеть
+    networks:
+      - bot-network
+
+  # 🏗️ React Build Service
+  mini-app-builder:
+    image: node:18-alpine
+    container_name: mini-app-builder
+    working_dir: /app
+    volumes:
+      - ./mini-app:/app
+      - mini-app-dist:/app/dist  # Named volume для dist
+    command: sh -c "npm install && npm run build"
+    networks:
+      - bot-network
+
+# 🌐 Сети
+networks:
+  bot-network:
+    driver: bridge
+    name: telegram-bot-network
+
+# 💾 Volumes
+volumes:
+  # Данные Nginx (если понадобятся в будущем)
+  nginx_data:
+    driver: local
+    name: nginx_data
+  mini-app-dist:  # Named volume для dist

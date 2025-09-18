@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Telemost OAuth Redirect</title>
+  <style>
+    :root {
+      --bg: #0f1419;
+      --card: #161b22;
+      --text: #e6edf3;
+      --muted: #9aa4af;
+      --accent: #2ea043;
+      --accent-2: #1f6feb;
+      --danger: #f85149;
+      --border: #30363d;
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .card {
+      width: 100%;
+      max-width: 420px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      animation: fadeIn 240ms ease-out;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    h1 {
+      margin: 0;
+      font-size: 1.25rem;
+    }
+    p { margin: 0; color: var(--muted); }
+    .code-box {
+      margin-top: 4px;
+      background: #0b0f14;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 0.95rem;
+      word-break: break-all;
+      position: relative;
+    }
+    .hint { color: var(--muted); font-size: 0.9rem; }
+    .row { display: flex; gap: 12px; align-items: center; }
+    .btn {
+      width: 100%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 14px 16px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: var(--accent);
+      color: #fff;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 120ms ease, opacity 120ms ease, box-shadow 120ms ease;
+      text-decoration: none;
+    }
+    .btn.secondary { background: transparent; color: var(--text); border-color: var(--border); }
+    .btn:active { transform: translateY(1px); opacity: 0.9; }
+    .copy-status { font-size: 0.9rem; color: var(--muted); min-height: 1em; }
+    .meta { color: var(--muted); font-size: 0.85rem; }
+    .error { color: var(--danger); }
+  </style>
+  <script>
+    function getParam(name) {
+      const params = new URLSearchParams(window.location.search);
+      return params.get(name);
+    }
+
+    async function copyToClipboard(text) {
+      try {
+        await navigator.clipboard.writeText(text);
+        return true;
+      } catch (e) {
+        try {
+          const ta = document.createElement('textarea');
+          ta.value = text;
+          document.body.appendChild(ta);
+          ta.select();
+          document.execCommand('copy');
+          document.body.removeChild(ta);
+          return true;
+        } catch (err) {
+          return false;
+        }
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const code = getParam('code');
+      const cid = getParam('cid');
+
+      const codeBox = document.getElementById('codeBox');
+      const cmdBox = document.getElementById('cmdBox');
+      const copyBtn = document.getElementById('copyBtn');
+      const copyStatus = document.getElementById('copyStatus');
+      const cidBox = document.getElementById('cidBox');
+      const errBox = document.getElementById('errBox');
+
+      if (!code) {
+        errBox.textContent = 'В ссылке нет параметра code.';
+        errBox.style.display = 'block';
+        document.getElementById('content').style.display = 'none';
+        return;
+      }
+
+      const command = `/telemost_code ${code}`;
+      codeBox.textContent = code;
+      cmdBox.textContent = command;
+      if (cid) cidBox.textContent = `cid: ${cid}`;
+
+      copyBtn.addEventListener('click', async () => {
+        const ok = await copyToClipboard(command);
+        copyStatus.textContent = ok ? 'Команда скопирована в буфер обмена' : 'Не удалось скопировать';
+      });
+
+      cmdBox.addEventListener('click', async () => {
+        const ok = await copyToClipboard(command);
+        copyStatus.textContent = ok ? 'Команда скопирована' : 'Не удалось скопировать';
+      });
+    });
+  </script>
+  <!-- Telegram Web App API не обязателен для этой страницы -->
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="card">
+    <h1>Код авторизации получен</h1>
+    <p class="hint">Скопируйте и отправьте команду боту, чтобы завершить вход.</p>
+
+    <div id="errBox" class="error" style="display:none"></div>
+
+    <div id="content">
+      <div>
+        <div class="meta">code</div>
+        <div id="codeBox" class="code-box"></div>
+      </div>
+
+      <div>
+        <div class="meta">команда для бота</div>
+        <div id="cmdBox" class="code-box" title="Нажмите, чтобы скопировать"></div>
+        <div class="copy-status" id="copyStatus"></div>
+      </div>
+
+      <div class="row">
+        <button id="copyBtn" class="btn">Скопировать команду</button>
+      </div>
+
+      <div id="cidBox" class="meta"></div>
+    </div>
+  </div>
+</body>
+</html>
+
+

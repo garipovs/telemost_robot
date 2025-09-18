@@ -1,0 +1,78 @@
+/* Стили для уведомлений */
+.notification-toast {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: #ffffff;
+  color: #000000;
+  padding: 12px 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  font-size: 14px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  animation: slideIn 0.3s ease-out;
+  max-width: calc(100vw - 40px);
+  word-wrap: break-word;
+  border: 1px solid #e0e0e0;
+}
+
+.notification-toast--success {
+  background: #ffffff;
+  color: #000000;
+}
+
+.notification-toast--error {
+  background: #ffffff;
+  color: #000000;
+}
+
+.notification-toast--info {
+  background: #ffffff;
+  color: #000000;
+}
+
+.notification-toast__icon {
+  flex-shrink: 0;
+}
+
+.notification-toast__message {
+  flex: 1;
+}
+
+/* Анимации */
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideOut {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .notification-toast {
+    top: 10px;
+    right: 10px;
+    left: 10px;
+    max-width: none;
+  }
+}

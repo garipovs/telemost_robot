@@ -1,0 +1,134 @@
+# 🔒 TELEGRAM BOT .GITIGNORE
+
+# 📁 Переменные окружения (содержат секретные данные)
+.env
+.env.local
+.env.production
+.env.staging
+
+# 🐍 Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# 🧪 Тестирование
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.nox/
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+
+# 🐳 Docker
+.dockerignore
+docker-compose.override.yml
+docker-compose.prod.yml
+
+# 📊 Логи
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# 🔐 Токены и секреты
+telemost_token.json
+*.token
+*.key
+*.pem
+*.crt
+
+# 💾 Базы данных
+*.db
+*.sqlite
+*.sqlite3
+
+# 🗂️ Временные файлы
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+*~
+
+# 🛠️ IDE и редакторы
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.pydevproject
+.settings/
+
+# 📦 Node.js (если будет использоваться)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# 🌐 Nginx
+nginx.conf.backup
+nginx.conf.old
+
+# 📋 SSL сертификаты
+*.pem
+*.crt
+*.key
+ssl/
+
+# 🔄 Бэкапы
+*.backup
+*.bak
+*.tar.gz
+*.zip
+
+# 📱 Telegram Bot специфичные файлы
+bot_data/
+user_data/
+session_data/
+
+# 🚀 Deploy скрипты (если содержат секреты)
+deploy.sh.local
+deploy.prod.sh
+
+# 📊 Мониторинг
+grafana_data/
+prometheus_data/
+
+# 🔧 Локальные конфигурации
+docker-compose.local.yml
+nginx.local.conf
+
+# 📝 Документация (если генерируется автоматически)
+docs/_build/
+site/
+
+# 🧹 Очистка
+cleanup.sh
+*.tmp
+*.temp

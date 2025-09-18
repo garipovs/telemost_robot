@@ -1,0 +1,150 @@
+# �� NGINX КОНФИГУРАЦИЯ ДЛЯ TELEGRAM BOT + STATIC APP
+
+user nginx;
+worker_processes auto;
+error_log /var/log/nginx/error.log notice;
+pid /var/run/nginx.pid;
+
+events {
+    worker_connections 1024;
+    use epoll;
+    multi_accept on;
+}
+
+http {
+    include /etc/nginx/mime.types;
+    default_type application/octet-stream;
+
+    # 📝 Логирование
+    log_format main '$remote_addr - $remote_user [$time_local] "$request" '
+                    '$status $body_bytes_sent "$http_referer" '
+                    '"$http_user_agent" "$http_x_forwarded_for"';
+
+    access_log /var/log/nginx/access.log main;
+
+    # ⚡ Оптимизация производительности
+    sendfile on;
+    tcp_nopush on;
+    tcp_nodelay on;
+    keepalive_timeout 65;
+    types_hash_max_size 2048;
+    client_max_body_size 16M;
+
+    # 🗜️ Сжатие
+    # gzip on;
+    # gzip_vary on;
+    # gzip_min_length 1024;
+    # gzip_proxied any;
+    # gzip_comp_level 6;
+    # gzip_types
+    #     text/plain
+    #     text/css
+    #     text/xml
+    #     text/javascript
+    #     application/json
+    #     application/javascript
+    #     application/xml+rss
+    #     application/atom+xml
+    #     image/svg+xml;
+
+    # 🔒 Безопасность
+    server_tokens off;
+    add_header X-Frame-Options DENY;
+    add_header X-Content-Type-Options nosniff;
+    add_header X-XSS-Protection "1; mode=block";
+
+    # 🌐 Upstream для Telegram Bot
+    upstream telegram_bot {
+        server telegram-bot:8443;
+        keepalive 32;
+    }
+
+    # 🏠 Основной сервер
+    server {
+        listen 3010;
+        server_name _;
+        root /usr/share/nginx/html;
+        index index.html;
+
+        # 📊 Health check endpoint
+        location /health {
+            access_log off;
+            return 200 "healthy\n";
+            add_header Content-Type text/plain;
+        }
+
+        # 🤖 Проксирование к Telegram Bot API
+        location /api/ {
+            proxy_pass http://telegram_bot;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+            
+            # Таймауты
+            proxy_connect_timeout 30s;
+            proxy_send_timeout 30s;
+            proxy_read_timeout 30s;
+        
+        }
+
+        # 🔗 Webhook для Telegram Bot
+        location /bot {
+            proxy_pass http://telegram_bot;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+            
+            # Таймауты
+            proxy_connect_timeout 30s;
+            proxy_send_timeout 30s;
+            proxy_read_timeout 30s;
+        }
+
+
+
+        # 📱 Mini App статические файлы
+        location /bot/telemost/app {
+            alias /usr/share/nginx/html/app;
+            try_files $uri $uri/ /bot/telemost/app/index.html;
+
+            
+            # Кэширование для остальных статических файлов
+            location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$ {
+                expires 1y;
+                add_header Cache-Control "public, immutable";
+                access_log off;
+            }
+            
+            # HTML файлы
+            location ~* \.html$ {
+                add_header Cache-Control "no-cache, no-store, must-revalidate";
+                add_header Pragma "no-cache";
+                add_header Expires "0";
+            }
+        }
+
+        # 🔄 Редирект для корневого пути
+        location = / {
+            return 301 /app/;
+        }
+
+        # 🚫 Блокировка служебных файлов
+        location ~ /\. {
+            deny all;
+            access_log off;
+            log_not_found off;
+        }
+
+        location ~ ~$ {
+            deny all;
+            access_log off;
+            log_not_found off;
+        }
+
+        # 📄 Обработка ошибок
+        error_page 404 /app/index.html;
+        error_page 500 502 503 504 /app/index.html;
+    }
+}

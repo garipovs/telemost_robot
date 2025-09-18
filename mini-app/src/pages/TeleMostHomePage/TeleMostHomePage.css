@@ -1,0 +1,99 @@
+/* Стили для главной страницы Telemost */
+
+.telemost-home {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 20px;
+  gap: 40px;
+}
+
+/* Заголовок и логотип */
+.telemost-home__header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+
+}
+
+.telemost-home__logo-icon {
+  width: 80px;
+  height: 80px;
+  background-color: var(--tg-theme-text-color, #000000);
+  border-radius: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  margin-bottom: 10px;
+}
+
+.telemost-home__title {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--tg-theme-text-color, #000000);
+  margin: 0;
+  display: flex;
+  align-items: baseline;
+}
+
+.telemost-home__subtitle {
+  font-size: 16px;
+  color: var(--tg-theme-text-color, #000000);
+  margin: 0;
+  font-weight: 400;
+}
+
+
+.telemost-home__create-button {
+  background-color: var(--tg-theme-bg-color, #ffffff) !important;
+  cursor: pointer;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  border-radius: 24px;
+}
+
+.telemost-home__create-button:hover {
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+  transform: translateY(-1px);
+  transition: transform 0.3s ease;
+}
+
+.telemost-home__create-button:active {
+  transform: translateY(0);
+  transition: transform 0.3s ease;
+}
+
+.telemost-home__create-button[disabled] {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.telemost-home__button-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  min-width: 300px;
+  padding: 10px;
+  gap: 5px;
+}
+
+
+.telemost-home__button-content h2 {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--tg-theme-text-color, #000000);
+  margin: 0;
+  white-space: normal;
+}
+
+.telemost-home__button-content p {
+  font-size: 14px;
+  color: var(--tg-theme-hint-color, #666666);
+  margin: 0;
+  line-height: 1.4;
+  white-space: normal;
+}
+
