@@ -1,6 +1,6 @@
 # 🐳 DOCKERFILE ДЛЯ TELEGRAM БОТА
 
-FROM python:3.13-slim
+FROM python:3.13-trixie
 
 # 📝 Метаданные
 LABEL maintainer="lea_alex"
