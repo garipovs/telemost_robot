@@ -3,7 +3,7 @@
   "private": true,
   "version": "1.1.0",
   "type": "module",
-  "homepage": "https://tlemst.ru/bot/telemost/app/",
+  "homepage": "https://telemosts.ru/bot/telemost/app/",
   "scripts": {
     "deploy": "gh-pages -d dist",
     "dev": "vite",

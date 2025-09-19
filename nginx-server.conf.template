@@ -7,15 +7,15 @@ upstream telemost_bot {
     keepalive 32;
 }
 
-# 🏠 Основной сервер tlemst.ru
+# 🏠 Основной сервер telemosts.ru
 server {
     listen 80;
     listen 443 ssl http2;
-    server_name tlemst.ru www.tlemst.ru;
+    server_name telemosts.ru www.telemosts.ru;
 
     # 🔒 SSL конфигурация (если используете Let's Encrypt)
-    # ssl_certificate /etc/letsencrypt/live/tlemst.ru/fullchain.pem;
-    # ssl_certificate_key /etc/letsencrypt/live/tlemst.ru/privkey.pem;
+    # ssl_certificate /etc/letsencrypt/live/telemosts.ru/fullchain.pem;
+    # ssl_certificate_key /etc/letsencrypt/live/telemosts.ru/privkey.pem;
     # ssl_protocols TLSv1.2 TLSv1.3;
     # ssl_ciphers ECDHE-RSA-AES256-GCM-SHA512:DHE-RSA-AES256-GCM-SHA512:ECDHE-RSA-AES256-GCM-SHA384:DHE-RSA-AES256-GCM-SHA384;
     # ssl_prefer_server_ciphers off;
@@ -72,7 +72,7 @@ server {
     # 🏠 Корневая страница (если нужна)
     location = / {
         # Здесь может быть ваша главная страница
-        return 200 "Welcome to tlemst.ru\n";
+        return 200 "Welcome to telemosts.ru\n";
         add_header Content-Type text/plain;
     }
 }
@@ -81,6 +81,6 @@ server {
 server {
     listen 80;
     listen 443 ssl http2;
-    server_name www.tlemst.ru;
-    return 301 $scheme://tlemst.ru$request_uri;
+    server_name www.telemosts.ru;
+    return 301 $scheme://telemosts.ru$request_uri;
 }
