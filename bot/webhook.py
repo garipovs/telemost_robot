@@ -52,8 +52,8 @@ async def create_prepared_message_for_user(user_id: int, bot: Bot, video_call_ur
         text=(f"✅ Join my video  <a href='{video_call_url}'>call!</a>\n")
     
         
-        video_url = f"https://tlemst.ru/bot/telemost/app/friends.mp4"
-        thumbnail_url = f"https://tlemst.ru/bot/telemost/app/assets/friends-thumb.jpg"  # Если есть превью
+        video_url = f"https://telemosts.ru/bot/telemost/app/friends.mp4"
+        thumbnail_url = f"https://telemosts.ru/bot/telemost/app/assets/friends-thumb.jpg"  # Если есть превью
 
         inline_result = InlineQueryResultVideo(
             id=f"video_call_invitation_{user_id}",
