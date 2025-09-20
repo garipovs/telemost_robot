@@ -19,12 +19,16 @@ from aiogram.types import (
     InlineKeyboardMarkup,
     InlineKeyboardButton,
     InputTextMessageContent,
+    FSInputFile,
 )
 from aiogram.filters import Command
 import json
 from utils.telemost import TelemostClient
 from config import BASE_URL, APP_URL
 from urllib.parse import quote_plus
+
+
+from pathlib import Path
 
 # Создаем роутер для общих обработчиков
 router = Router()
@@ -78,33 +82,41 @@ async def send_video_call_message(message: Message):
     # Используем полученную ссылку на встречу
     video_call_url = telemost_url
 
-    # Deep link для открытия другого Mini App отключен
-    deep_link_other = None
+    share_text = quote_plus(f"👋 Join my video call!")
+    share_url = f"https://t.me/share/url?text={share_text}&url={quote_plus(video_call_url)}"
 
-    app_base = (APP_URL or f"{BASE_URL}/app").rstrip('/')
-    share_page_url = f"{app_base}/index.html?url={quote_plus(video_call_url)}"
+    keyboard_inline = InlineKeyboardMarkup(
+        inline_keyboard=[[
+            InlineKeyboardButton(text="▶️ Open Call", url=video_call_url),],[
+            InlineKeyboardButton(text="➕ Invite Friends", url=share_url),
+        ]]
+    )
 
-    keyboard_rows = [
-        [
-            InlineKeyboardButton(text="📤 Share", url=video_call_url,),
-            InlineKeyboardButton(text="🔗 Video call link (VKS)", url=video_call_url),
-        ]
-    ]
-
-    keyboard_inline = InlineKeyboardMarkup(inline_keyboard=keyboard_rows)
     
     video_call_text = (
-        "🏠 <b>!Your video call has been created!</b>\n\n"
-        f"🔗 Link: {video_call_url}\n"
-        "👥 Invite friends or open the VKS link\n\n"
-        "✨ Choose an action:"
+        f"✅ Your video call is <a href='{video_call_url}'>ready!</a>\n"
+        f"📢 <a href='{share_url}'>Invite your</a> friends to join.\n"
     )
     
-    await message.answer(
-        video_call_text,
-        reply_markup=keyboard_inline,
-        parse_mode="HTML",
-    )
+    video_path = Path(__file__).parent.parent / "assets" / "call.mp4"
+    try:
+        if video_path.exists() and video_path.stat().st_size > 0:
+            await message.answer_video(
+                video=FSInputFile(video_path),
+                caption=video_call_text,
+                supports_streaming=True,
+                reply_markup=keyboard_inline,
+                parse_mode="HTML",
+            )
+        else:
+            raise FileNotFoundError("Video file not found or empty")
+    except Exception:
+        # Fallback на текстовое сообщение
+        await message.answer(
+            video_call_text,
+            reply_markup=keyboard_inline,
+            parse_mode="HTML",
+        )
 
 
 
