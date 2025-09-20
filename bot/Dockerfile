@@ -31,8 +31,9 @@ COPY bot/utils/ ./utils/
 COPY bot/assets/ ./assets/
 COPY __init__.py ./
 
-# 👤 Создание непривилегированного пользователя
+# 👤 Создание непривилегированного пользователя и директорий
 RUN useradd --create-home --shell /bin/bash app && \
+    mkdir -p /app/logs && \
     chown -R app:app /app
 USER app
 
