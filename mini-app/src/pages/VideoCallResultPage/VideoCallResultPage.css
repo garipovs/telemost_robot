@@ -7,6 +7,8 @@
   align-items: center;
   padding: 40px 20px;
   gap: 40px;
+  background-color: var(--tg-theme-bg-color, #ECEEF0);
+  transition: background-color 0.3s ease;
 }
 
 /* Заголовок и логотип */
@@ -15,50 +17,51 @@
   flex-direction: column;
   align-items: center;
   text-align: center;
-
 }
 
 .video-call-result__logo-icon {
   width: 80px;
   height: 80px;
-  background-color: var(--tg-theme-text-color, #000000);
+  background-color: var(--tg-theme-text-color, #04060B);
   border-radius: 24px;
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
   margin-bottom: 10px;
+  transition: background-color 0.3s ease;
 }
 
 .video-call-result__title {
   font-size: 24px;
   font-weight: 700;
-  color: var(--tg-theme-text-color, #000000);
+  color: var(--tg-theme-text-color, #04060B);
   margin: 0;
   display: flex;
   align-items: baseline;
+  transition: color 0.3s ease;
 }
 
 .video-call-result__subtitle {
   font-size: 16px;
-  color: var(--tg-theme-text-color, #000000);
+  color: var(--tg-theme-text-color, #04060B);
   margin: 0;
   font-weight: 400;
+  transition: color 0.3s ease;
 }
 
 /* Кнопки действий */
 .video-call-result__invite-button,
 .video-call-result__join-button {
-  background-color: var(--tg-theme-bg-color, #ffffff) !important;
+  background-color: var(--tg-theme-secondary-bg-color, #FFFFFF) !important;
   cursor: pointer;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
   border-radius: 24px;
-
+  border: none;
+  transition: all 0.3s ease;
 }
 
 .video-call-result__invite-button:hover,
 .video-call-result__join-button:hover {
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
   transform: translateY(-1px);
   transition: transform 0.3s ease;
 }
@@ -94,9 +97,10 @@
 .video-call-result__button-content h2 {
   font-size: 16px;
   font-weight: 600;
-  color: var(--tg-theme-text-color, #000000);
+  color: var(--tg-theme-text-color, #04060B);
   margin: 0;
   white-space: normal;
+  transition: color 0.3s ease;
 }
 
 .video-call-result__button-content p {
@@ -105,5 +109,11 @@
   margin: 0;
   line-height: 1.4;
   white-space: normal;
+  transition: color 0.3s ease;
 }
 
+/* Стили для SVG иконок */
+.video-call-result__button-content svg path {
+  fill: var(--tg-theme-text-color, #04060B);
+  transition: fill 0.3s ease;
+}

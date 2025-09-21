@@ -9,6 +9,13 @@ export function App() {
   const lp = useMemo(() => retrieveLaunchParams(), []);
   const isDark = useSignal(isMiniAppDark);
 
+  // Отладочная информация
+  console.log('=== App Theme Debug ===');
+  console.log('isDark:', isDark);
+  console.log('launchParams:', lp);
+  console.log('tgWebAppThemeParams:', lp.tgWebAppThemeParams);
+  console.log('=======================');
+
   return (
     <AppRoot
       appearance={isDark ? 'dark' : 'light'}

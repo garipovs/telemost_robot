@@ -3,11 +3,10 @@
   position: fixed;
   top: 20px;
   right: 20px;
-  background: #ffffff;
-  color: #000000;
+  background: var(--tg-theme-secondary-bg-color, #ffffff);
+  color: var(--tg-theme-text-color, #000000);
   padding: 12px 20px;
   border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   z-index: 1000;
   font-size: 14px;
   font-weight: 500;
@@ -18,22 +17,23 @@
   animation: slideIn 0.3s ease-out;
   max-width: calc(100vw - 40px);
   word-wrap: break-word;
-  border: 1px solid #e0e0e0;
+  border: none;
+  transition: all 0.3s ease;
 }
 
 .notification-toast--success {
-  background: #ffffff;
-  color: #000000;
+  background: var(--tg-theme-secondary-bg-color, #ffffff);
+  color: var(--tg-theme-text-color, #000000);
 }
 
 .notification-toast--error {
-  background: #ffffff;
-  color: #000000;
+  background: var(--tg-theme-secondary-bg-color, #ffffff);
+  color: var(--tg-theme-text-color, #000000);
 }
 
 .notification-toast--info {
-  background: #ffffff;
-  color: #000000;
+  background: var(--tg-theme-secondary-bg-color, #ffffff);
+  color: var(--tg-theme-text-color, #000000);
 }
 
 .notification-toast__icon {
